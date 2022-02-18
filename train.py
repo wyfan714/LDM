@@ -8,7 +8,6 @@ from net.googlenet import *
 from net.bn_inception import *
 from dataset import sampler
 from torch.utils.data.sampler import BatchSampler
-#from torch.utils.data.dataloader import default_collate
 from tqdm import *
 import sys
 #import wandb
@@ -20,12 +19,12 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed) # set random seed for all gpus
 
 parser = argparse.ArgumentParser(description=
-    'Official implementation of `Learnable Margin in Deep Metric Learning`'  
+    'Official implementation of `Adaptive Margin in Deep Metric Learning`'  
     + 'Our code is modified from `https://github.com/tjddus9597/Proxy-Anchor-CVPR2020`'
 )
 # export directory, training and val datasets, test datasets
 parser.add_argument('--LOG_DIR', 
-    default='../Proxy_Anchor/Newlogs',
+    default='./Proxy_Anchor/Newlogs',
     help = 'Path to log folder'
 )
 parser.add_argument('--dataset', 
@@ -114,8 +113,6 @@ parser.add_argument('--remark', default = '',
 
 parser.add_argument('--delta',  default=0.1, type = float,
     help='delta in proxy&proxy')
-parser.add_argument('--T',  default=1.0, type = float,
-    help='temperature in proxy&proxy')
 parser.add_argument('--lam',  default=1.0, type = float,
     help='lambda in proxy&proxy')
 
@@ -126,7 +123,7 @@ def main():
         torch.cuda.set_device(args.gpu_id)
 
     # Directory for Log
-    LOG_DIR = args.LOG_DIR + '/logs_{}/{}_embedding/{}_batchsize/{}_{}_alphap{}_alphan{}_mrg{}_{}_lr{}_mrglr{}_epochs{}_delta{}_T{}_lambda{}'.format(args.dataset,
+    LOG_DIR = args.LOG_DIR + '/logs_{}/{}_embedding/{}_batchsize/{}_{}_alphap{}_alphan{}_mrg{}_{}_lr{}_mrglr{}_epochs{}_delta{}_lambda{}'.format(args.dataset,
                                                                                                  args.sz_embedding,
                                                                                                  args.sz_batch,
                                                                                                  args.model, args.loss,            
@@ -138,12 +135,10 @@ def main():
                                                                                                  args.mrg_lr,
                                                                                                  args.nb_epochs,
                                                                                                  args.delta,
-                                                                                                 args.T,
                                                                                                  args.lam)
     # Wandb Initialization
    # wandb.init(project=args.dataset + '_ProxyAnchor', notes=LOG_DIR)
    # wandb.config.update(args)
-    # data_root = os.getcwd()
     data_root = os.path.join('/media/', 'wyf')  # wyf
 
     # Dataset Loader and Sampler
@@ -227,38 +222,6 @@ def main():
             num_workers = args.nb_workers,
             pin_memory = True
         )
-    elif args.dataset == 'market':
-        query_dataset = market1501(
-                root = data_root,
-                mode = 'query',
-                transform = dataset.utils.make_transform(
-                    is_train = False, 
-                    is_inception = (args.model == 'bn_inception')
-        ))
-        
-        dl_query = torch.utils.data.DataLoader(
-            query_dataset,
-            batch_size = args.sz_batch,
-            shuffle = False,
-            num_workers = args.nb_workers,
-            pin_memory = True
-        )
-    
-        gallery_dataset = market1501(
-                root = data_root,
-                mode = 'gallery',
-                transform = dataset.utils.make_transform(
-                    is_train = False, 
-                    is_inception = (args.model == 'bn_inception')
-        ))
-        
-        dl_gallery = torch.utils.data.DataLoader(
-            gallery_dataset,
-            batch_size = args.sz_batch,
-            shuffle = False,
-            num_workers = args.nb_workers,
-            pin_memory = True
-        )
     else:
         ev_dataset = dataset.load(
                 name = args.dataset,
@@ -306,10 +269,6 @@ def main():
         criterion = losses.Proxy_Anchor(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alphap=args.alphap,alphan=args.alphan, delta=args.delta, T=args.T, lam=args.lam).cuda()
     elif args.loss == 'Proxy_Anchor_origin':
         criterion = losses.Proxy_Anchor_origin(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alpha=args.alphap).cuda()
-    elif args.loss == 'PsPa':
-        criterion = losses.PsPa(n_classes=nb_classes, input_dim=args.sz_embedding,mrg=args.mrg, alpha=args.alpha,ps_mu=1.0, ps_alpha=0.4).cuda()
-    elif args.loss == 'Proxywyf':
-        criterion = losses.Proxywyf(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alpha=args.alpha).cuda()
     elif args.loss == 'Circle':
         criterion = losses.CircleLoss(m = 0.4, gamma = 80 ).cuda()
     elif args.loss == 'ProxyGML':
@@ -382,6 +341,7 @@ def main():
     print("Training for {} epochs.".format(args.nb_epochs))
     losses_list = []
     best_recall = [0]
+    best_map = 0
     best_epoch = 0
 
     for epoch in range(0, args.nb_epochs):
@@ -433,8 +393,6 @@ def main():
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'Proxy_Anchor_origin':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
-            if args.loss == 'PsPa':
-                torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'Proxywyf':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'ProxyGML':
@@ -464,6 +422,7 @@ def main():
                 elif args.dataset == 'market':
                     Recalls = utils.evaluate_cos_Market(model, dl_query, dl_gallery)
                 elif args.dataset != 'SOP':
+                    MAP = utils.evaluate_map(model, dl_ev)
                     Recalls = utils.evaluate_cos(model, dl_ev)
                 else:
                     Recalls = utils.evaluate_cos_SOP(model, dl_ev)
@@ -483,6 +442,11 @@ def main():
              #        wandb.log({"R@{}".format(10**i): Recalls[i]}, step=epoch)
 
             # Best model save
+            if best_map < MAP:
+                best_map = MAP
+                with open('{}/{}_{}_best_map.txt'.format(LOG_DIR, args.dataset, args.model), 'w') as f:
+                    f.write('best epoch: {}\n'.format(epoch))
+                    f.write('best map: {}\n'.format(best_map))
             if best_recall[0] < Recalls[0]:
                 best_recall = Recalls
                 best_epoch = epoch
