@@ -64,7 +64,7 @@ def calc_map_at_k(T, Y, k):
     map = 0
     for t,y in zip(T, Y):
         cnt = 0
-        s = -
+        s = 0
         ap = 0
         for i in range(k):
             cnt = cnt + 1
