@@ -1,0 +1,133 @@
+
+Random Sampling
+Training parameters: {'LOG_DIR': '../Proxy_Anchor/Newlogs', 'dataset': 'cub', 'sz_embedding': 512, 'sz_batch': 90, 'nb_epochs': 40, 'gpu_id': 1, 'nb_workers': 2, 'model': 'bn_inception', 'loss': 'Proxy_Anchor', 'optimizer': 'adamw', 'lr': 0.0001, 'mrg_lr': 0.0005, 'weight_decay': 0.0001, 'weight_lambda': 0.3, 'lr_decay_step': 10, 'lr_decay_gamma': 0.5, 'mrg_lr_decay_step': 10, 'mrg_lr_decay_gamma': 0.5, 'alpha': 48.0, 'mrg': 0.1, 'IPC': None, 'warm': 1, 'bn_freeze': 1, 'l2_norm': 1, 'remark': '', 'delta': -0.1, 'T': 1.0, 'lam': 1.0}
+Training for 40 epochs.
+
+
+
+
+
+
+
+Train Epoch: 0 [58/65 (88%)] Loss: 14.994062: : 57it [00:14,  4.11it/s]
+Train Epoch: 0 [65/65 (98%)] Loss: 14.546222: : 65it [00:16,  3.88it/s]
+
+
+
+
+
+
+
+
+ 89%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▊               | 59/66 [00:16<00:01,  3.79it/s]
+R@1 : 50.456
+R@2 : 63.825
+R@4 : 76.199
+
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 66/66 [00:17<00:00,  3.68it/s]
+R@16 : 91.847
+R@32 : 95.949
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+
+
+
+
+
+
+Train Epoch: 1 [58/65 (88%)] Loss: 12.119818: : 58it [00:13,  4.36it/s]
+Train Epoch: 1 [65/65 (98%)] Loss: 13.421375: : 65it [00:15,  4.19it/s]
+
+
+
+
+
+
+
+
+ 97%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▋    | 64/66 [00:16<00:00,  4.17it/s]
+R@1 : 59.487
+R@2 : 71.523
+R@4 : 80.807
+R@8 : 88.251
+R@16 : 93.754
+R@32 : 96.658
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 66/66 [00:16<00:00,  3.93it/s]
+
+
+
+
+
+
+
+Train Epoch: 2 [62/65 (94%)] Loss: 10.126665: : 62it [00:14,  4.37it/s]
+Train Epoch: 2 [65/65 (98%)] Loss: 10.724806: : 65it [00:15,  4.15it/s]
+
+
+
+
+
+
+
+ 89%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▊               | 59/66 [00:15<00:01,  3.98it/s]
+R@1 : 63.336
+R@2 : 74.814
+R@4 : 83.677
+R@8 : 90.463
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 66/66 [00:16<00:00,  3.92it/s]
+0it [00:00, ?it/s]
+R@32 : 96.911
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+args.dataset == SOP
+
+
+
+
+
+
+
+Train Epoch: 3 [59/65 (89%)] Loss: 9.702681: : 59it [00:14,  4.32it/s]
+Train Epoch: 3 [65/65 (98%)] Loss: 9.486669: : 65it [00:15,  4.19it/s]
+
+
+
+
+
+
+ 76%|████████████████████████████████████████████████████████████████████████████████████████████████████████████▎                                  | 50/66 [00:12<00:04,  3.88it/s]
+Traceback (most recent call last):
+  File "train.py", line 502, in <module>
+    main()
+  File "train.py", line 459, in main
+    Recalls = utils.evaluate_cos(model, dl_ev)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 70, in evaluate_cos
+    X, T = predict_batchwise(model, dataloader)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 42, in predict_batchwise
+    for batch in tqdm(dataloader):
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/tqdm/std.py", line 1178, in __iter__
+    for obj in iterable:
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1182, in _next_data
+    idx, data = self._get_data()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1138, in _get_data
+    success, data = self._try_get_data()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 986, in _try_get_data
+    data = self._data_queue.get(timeout=timeout)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/queue.py", line 179, in get
+    self.not_empty.wait(remaining)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/threading.py", line 306, in wait
+    gotit = waiter.acquire(True, timeout)
+KeyboardInterrupt

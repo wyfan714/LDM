@@ -1,0 +1,31 @@
+
+Random Sampling
+0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 505, in <module>
+    main()
+  File "train.py", line 418, in main
+    for batch_idx, (x, y, _) in pbar:
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/tqdm/std.py", line 1178, in __iter__
+    for obj in iterable:
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1199, in _next_data
+    return self._process_data(data)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1225, in _process_data
+    data.reraise()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/_utils.py", line 429, in reraise
+    raise self.exc_type(msg)
+NameError: Caught NameError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/_utils/worker.py", line 202, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/wyf/Proxy_Anchor/dataset/base.py", line 38, in __getitem__
+    return im, target, im_paths[index]
+NameError: name 'im_paths' is not defined
+Training parameters: {'LOG_DIR': '../Proxy_Anchor/Newlogs', 'dataset': 'cub', 'sz_embedding': 512, 'sz_batch': 90, 'nb_epochs': 40, 'gpu_id': 1, 'nb_workers': 2, 'model': 'bn_inception', 'loss': 'Proxy_Anchor', 'optimizer': 'adamw', 'lr': 0.0001, 'mrg_lr': 0.0005, 'weight_decay': 0.0001, 'weight_lambda': 0.3, 'lr_decay_step': 10, 'lr_decay_gamma': 0.5, 'mrg_lr_decay_step': 10, 'mrg_lr_decay_gamma': 0.5, 'alphap': 48.0, 'alphan': 48.0, 'mrg': 0.1, 'IPC': None, 'warm': 1, 'bn_freeze': 1, 'l2_norm': 1, 'remark': '', 'delta': 0.1, 'T': 1.0, 'lam': 1.0}
+Training for 40 epochs.

@@ -1,0 +1,154 @@
+2021-09-04 18:52:56,819 INFO    MainThread:19396 [internal.py:wandb_internal():86] W&B internal server running at pid: 19396, started at: 2021-09-04 18:52:56.819559
+2021-09-04 18:52:56,822 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: check_version
+2021-09-04 18:52:56,822 INFO    WriterThread:19396 [datastore.py:open_for_write():77] open: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/run-2j0yavuo.wandb
+2021-09-04 18:52:56,825 DEBUG   SenderThread:19396 [sender.py:send():182] send: header
+2021-09-04 18:52:56,825 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: check_version
+2021-09-04 18:52:57,084 DEBUG   SenderThread:19396 [sender.py:send():182] send: run
+2021-09-04 18:52:57,088 DEBUG   SenderThread:19396 [git.py:repo():33] git repository is invalid
+2021-09-04 18:52:57,482 INFO    SenderThread:19396 [dir_watcher.py:__init__():168] watching files in: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files
+2021-09-04 18:52:57,482 INFO    SenderThread:19396 [sender.py:_start_run_threads():740] run started: 2j0yavuo with start time 1630752776
+2021-09-04 18:52:57,484 DEBUG   SenderThread:19396 [sender.py:send():182] send: summary
+2021-09-04 18:52:57,485 INFO    SenderThread:19396 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-04 18:52:57,487 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: run_start
+2021-09-04 18:52:57,493 DEBUG   HandlerThread:19396 [meta.py:__init__():39] meta init
+2021-09-04 18:52:57,493 DEBUG   HandlerThread:19396 [meta.py:__init__():53] meta init done
+2021-09-04 18:52:57,493 DEBUG   HandlerThread:19396 [meta.py:probe():210] probe
+2021-09-04 18:52:57,500 DEBUG   HandlerThread:19396 [git.py:repo():33] git repository is invalid
+2021-09-04 18:52:57,500 DEBUG   HandlerThread:19396 [meta.py:_save_pip():57] save pip
+2021-09-04 18:52:57,500 DEBUG   HandlerThread:19396 [meta.py:_save_pip():71] save pip done
+2021-09-04 18:52:57,501 DEBUG   HandlerThread:19396 [meta.py:_save_conda():78] save conda
+2021-09-04 18:52:58,486 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_created():216] file/dir created: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/requirements.txt
+2021-09-04 18:52:58,487 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_created():216] file/dir created: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-summary.json
+2021-09-04 18:52:58,487 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_created():216] file/dir created: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/conda-environment.yaml
+2021-09-04 18:52:58,811 DEBUG   HandlerThread:19396 [meta.py:_save_conda():86] save conda done
+2021-09-04 18:52:58,811 DEBUG   HandlerThread:19396 [meta.py:probe():252] probe done
+2021-09-04 18:52:58,816 DEBUG   SenderThread:19396 [sender.py:send():182] send: files
+2021-09-04 18:52:58,817 INFO    SenderThread:19396 [sender.py:_save_file():873] saving file wandb-metadata.json with policy now
+2021-09-04 18:52:58,825 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: stop_status
+2021-09-04 18:52:58,826 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: stop_status
+2021-09-04 18:52:59,208 DEBUG   SenderThread:19396 [sender.py:send():182] send: config
+2021-09-04 18:52:59,484 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/conda-environment.yaml
+2021-09-04 18:52:59,484 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_created():216] file/dir created: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-metadata.json
+2021-09-04 18:52:59,484 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_created():216] file/dir created: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log
+2021-09-04 18:52:59,777 INFO    Thread-11 :19396 [upload_job.py:push():137] Uploaded file /tmp/tmpqwc3hdh7wandb/fp7niat4-wandb-metadata.json
+2021-09-04 18:53:01,485 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log
+2021-09-04 18:53:03,486 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log
+2021-09-04 18:53:04,861 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:04,861 DEBUG   SenderThread:19396 [sender.py:send():182] send: telemetry
+2021-09-04 18:53:04,862 DEBUG   SenderThread:19396 [sender.py:send():182] send: exit
+2021-09-04 18:53:04,862 INFO    SenderThread:19396 [sender.py:send_exit():291] handling exit code: 1
+2021-09-04 18:53:04,862 INFO    SenderThread:19396 [sender.py:send_exit():293] handling runtime: 7
+2021-09-04 18:53:04,867 INFO    SenderThread:19396 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-04 18:53:04,867 INFO    SenderThread:19396 [sender.py:send_exit():303] send defer
+2021-09-04 18:53:04,867 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:04,868 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:04,868 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 0
+2021-09-04 18:53:04,868 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:04,869 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 0
+2021-09-04 18:53:04,869 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 1
+2021-09-04 18:53:04,869 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:04,869 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 1
+2021-09-04 18:53:04,917 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:04,917 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 1
+2021-09-04 18:53:04,917 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 2
+2021-09-04 18:53:04,918 DEBUG   SenderThread:19396 [sender.py:send():182] send: stats
+2021-09-04 18:53:04,918 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:04,919 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 2
+2021-09-04 18:53:04,919 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:04,919 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 2
+2021-09-04 18:53:04,919 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 3
+2021-09-04 18:53:04,920 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:04,920 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 3
+2021-09-04 18:53:04,920 DEBUG   SenderThread:19396 [sender.py:send():182] send: summary
+2021-09-04 18:53:04,921 INFO    SenderThread:19396 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-04 18:53:04,921 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:04,921 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 3
+2021-09-04 18:53:04,921 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 4
+2021-09-04 18:53:04,922 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:04,922 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 4
+2021-09-04 18:53:04,922 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:04,922 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 4
+2021-09-04 18:53:04,970 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,324 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 5
+2021-09-04 18:53:05,325 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:05,326 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:05,326 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 5
+2021-09-04 18:53:05,326 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:05,326 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 5
+2021-09-04 18:53:05,326 INFO    SenderThread:19396 [dir_watcher.py:finish():282] shutting down directory watcher
+2021-09-04 18:53:05,428 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,488 INFO    Thread-8  :19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-summary.json
+2021-09-04 18:53:05,488 INFO    SenderThread:19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/config.yaml
+2021-09-04 18:53:05,489 INFO    SenderThread:19396 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log
+2021-09-04 18:53:05,489 INFO    SenderThread:19396 [dir_watcher.py:finish():312] scan: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files
+2021-09-04 18:53:05,489 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-metadata.json wandb-metadata.json
+2021-09-04 18:53:05,490 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/conda-environment.yaml conda-environment.yaml
+2021-09-04 18:53:05,490 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/config.yaml config.yaml
+2021-09-04 18:53:05,490 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/requirements.txt requirements.txt
+2021-09-04 18:53:05,491 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log output.log
+2021-09-04 18:53:05,503 INFO    SenderThread:19396 [dir_watcher.py:finish():318] scan save: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-summary.json wandb-summary.json
+2021-09-04 18:53:05,511 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 6
+2021-09-04 18:53:05,517 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:05,527 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:05,527 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 6
+2021-09-04 18:53:05,528 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:05,528 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 6
+2021-09-04 18:53:05,528 INFO    SenderThread:19396 [file_pusher.py:finish():177] shutting down file pusher
+2021-09-04 18:53:05,622 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,623 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:05,726 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,726 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:05,829 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,829 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:05,945 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:05,945 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,048 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,048 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,151 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,152 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,254 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,255 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,359 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,360 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,444 INFO    Thread-12 :19396 [upload_job.py:push():137] Uploaded file /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/conda-environment.yaml
+2021-09-04 18:53:06,458 INFO    Thread-15 :19396 [upload_job.py:push():137] Uploaded file /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/output.log
+2021-09-04 18:53:06,465 INFO    Thread-13 :19396 [upload_job.py:push():137] Uploaded file /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/config.yaml
+2021-09-04 18:53:06,466 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,467 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,489 INFO    Thread-16 :19396 [upload_job.py:push():137] Uploaded file /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/wandb-summary.json
+2021-09-04 18:53:06,501 INFO    Thread-14 :19396 [upload_job.py:push():137] Uploaded file /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/files/requirements.txt
+2021-09-04 18:53:06,570 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,570 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,673 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:06,673 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:06,702 INFO    Thread-7  :19396 [sender.py:transition_state():316] send defer: 7
+2021-09-04 18:53:06,702 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:06,703 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 7
+2021-09-04 18:53:06,703 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:06,703 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 7
+2021-09-04 18:53:06,776 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:07,207 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 8
+2021-09-04 18:53:07,208 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:07,209 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:07,209 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 8
+2021-09-04 18:53:07,209 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:07,209 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 8
+2021-09-04 18:53:07,210 INFO    SenderThread:19396 [sender.py:transition_state():316] send defer: 9
+2021-09-04 18:53:07,211 DEBUG   SenderThread:19396 [sender.py:send():182] send: final
+2021-09-04 18:53:07,211 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: defer
+2021-09-04 18:53:07,211 DEBUG   SenderThread:19396 [sender.py:send():182] send: footer
+2021-09-04 18:53:07,211 INFO    HandlerThread:19396 [handler.py:handle_request_defer():145] handle defer: 9
+2021-09-04 18:53:07,212 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: defer
+2021-09-04 18:53:07,212 INFO    SenderThread:19396 [sender.py:send_request_defer():312] handle sender defer: 9
+2021-09-04 18:53:07,311 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: poll_exit
+2021-09-04 18:53:07,311 DEBUG   SenderThread:19396 [sender.py:send_request():196] send_request: poll_exit
+2021-09-04 18:53:07,312 INFO    SenderThread:19396 [file_pusher.py:join():182] waiting for file pusher
+2021-09-04 18:53:07,314 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: get_summary
+2021-09-04 18:53:07,315 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: sampled_history
+2021-09-04 18:53:07,316 DEBUG   HandlerThread:19396 [handler.py:handle_request():128] handle_request: shutdown
+2021-09-04 18:53:07,317 INFO    HandlerThread:19396 [handler.py:finish():677] shutting down handler
+2021-09-04 18:53:08,211 INFO    WriterThread:19396 [datastore.py:close():281] close: /home/wyf/Proxy_Anchor/wandb/run-20210904_185256-2j0yavuo/run-2j0yavuo.wandb
+2021-09-04 18:53:08,312 INFO    SenderThread:19396 [sender.py:finish():979] shutting down sender
+2021-09-04 18:53:08,312 INFO    SenderThread:19396 [file_pusher.py:finish():177] shutting down file pusher
+2021-09-04 18:53:08,313 INFO    SenderThread:19396 [file_pusher.py:join():182] waiting for file pusher
+2021-09-04 18:53:08,315 INFO    MainThread:19396 [internal.py:handle_exit():76] Internal process exited

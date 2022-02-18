@@ -1,0 +1,34 @@
+
+Random Sampling
+Training parameters: {'LOG_DIR': '../Proxy_Anchor/Newlogs', 'dataset': 'cub', 'sz_embedding': 512, 'sz_batch': 90, 'nb_epochs': 40, 'gpu_id': 1, 'nb_workers': 2, 'model': 'bn_inception', 'loss': 'Proxy_Anchor', 'optimizer': 'adamw', 'lr': 0.0001, 'mrg_lr': 0.0005, 'weight_decay': 0.0001, 'weight_lambda': 0.3, 'lr_decay_step': 10, 'lr_decay_gamma': 0.5, 'mrg_lr_decay_step': 10, 'mrg_lr_decay_gamma': 0.5, 'alphap': 48.0, 'alphan': 48.0, 'mrg': 0.1, 'IPC': None, 'warm': 1, 'bn_freeze': 1, 'l2_norm': 1, 'remark': '', 'delta': 0.1, 'T': 1.0, 'lam': 1.0}
+Training for 40 epochs.
+
+
+
+
+
+
+
+Train Epoch: 0 [60/65 (91%)] Loss: 15.007542: : 59it [00:15,  4.06it/s]
+Train Epoch: 0 [65/65 (98%)] Loss: 14.744200: : 65it [00:16,  3.94it/s]
+
+
+
+
+
+
+
+
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 66/66 [00:18<00:00,  3.66it/s]
+Traceback (most recent call last):
+  File "train.py", line 505, in <module>
+    main()
+  File "train.py", line 462, in main
+    Recalls = utils.evaluate_cos(model, dl_ev)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 72, in evaluate_cos
+    X, T, path = predict_batchwise(model, dataloader)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 58, in predict_batchwise
+    return [torch.stack(A[i]) for i in range(len(A))]
+  File "/home/wyf/Proxy_Anchor/utils.py", line 58, in <listcomp>
+    return [torch.stack(A[i]) for i in range(len(A))]
+TypeError: expected Tensor as element 0 in argument 0, but got str

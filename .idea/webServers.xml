@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="46b78ae0-defd-4a60-bc03-d8a794277541" name="transproxy">
+        <fileTransfer rootFolder="/home/wyf/TransFG-master/TransFG-master" accessType="SFTP" host="192.168.1.103" port="22" sshConfigId="6d0fefd6-ba51-4aac-bced-d7e691a13924" sshConfig="wyf@192.168.1.103:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

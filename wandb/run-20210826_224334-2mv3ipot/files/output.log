@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "train.py", line 505, in <module>
+    main()
+  File "train.py", line 288, in main
+    model = bn_inception(embedding_size=args.sz_embedding, pretrained=True, is_norm=args.l2_norm,
+  File "/home/wyf/Proxy_Anchor/net/bn_inception.py", line 23, in __init__
+    weight = model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/bn_inception-52deb4733.pth')
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/hub.py", line 528, in load_state_dict_from_url
+    return torch.load(cached_file, map_location=map_location)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/serialization.py", line 593, in load
+    return _legacy_load(opened_file, map_location, pickle_module, **pickle_load_args)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/serialization.py", line 779, in _legacy_load
+    deserialized_objects[key]._set_from_file(f, offset, f_should_read_directly)
+KeyboardInterrupt
+Random Sampling

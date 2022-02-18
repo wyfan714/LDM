@@ -1,0 +1,346 @@
+
+Random Sampling
+Train Epoch: 0 [2/65 (2%)] Loss: 19.659245: : 1it [00:00,  1.19it/s]
+Training parameters: {'LOG_DIR': '../Proxy_Anchor/Newlogs', 'dataset': 'cub', 'sz_embedding': 512, 'sz_batch': 90, 'nb_epochs': 40, 'gpu_id': 1, 'nb_workers': 2, 'model': 'bn_inception', 'loss': 'Proxy_Anchor', 'optimizer': 'adamw', 'lr': 0.0001, 'mrg_lr': 0.0005, 'weight_decay': 0.0001, 'weight_lambda': 0.3, 'lr_decay_step': 10, 'lr_decay_gamma': 0.5, 'mrg_lr_decay_step': 10, 'mrg_lr_decay_gamma': 0.5, 'alphap': 48.0, 'alphan': 48.0, 'mrg': 0.1, 'IPC': None, 'warm': 1, 'bn_freeze': 1, 'l2_norm': 1, 'remark': '', 'delta': 0.1, 'T': 1.0, 'lam': 1.0}
+
+
+
+
+
+
+Train Epoch: 0 [57/65 (86%)] Loss: 15.232578: : 57it [00:13,  4.56it/s]
+
+Train Epoch: 0 [65/65 (98%)] Loss: 14.744200: : 65it [00:14,  4.38it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 50.456
+R@2 : 63.825
+R@4 : 76.199
+R@8 : 85.213
+R@16 : 91.847
+R@32 : 95.949
+
+
+
+
+
+
+
+Train Epoch: 1 [62/65 (94%)] Loss: 12.406416: : 62it [00:14,  4.41it/s]
+
+Train Epoch: 1 [65/65 (98%)] Loss: 13.464967: : 65it [00:15,  4.15it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 59.622
+R@2 : 71.691
+R@4 : 81.904
+R@8 : 88.454
+R@16 : 93.535
+R@32 : 96.725
+
+
+
+
+
+
+
+Train Epoch: 2 [63/65 (95%)] Loss: 11.193964: : 63it [00:15,  4.36it/s]
+
+Train Epoch: 2 [65/65 (98%)] Loss: 10.969900: : 65it [00:15,  4.17it/s]
+Computing t-SNE embedding
+R@1 : 60.719
+0it [00:00, ?it/s]
+R@2 : 72.468
+R@4 : 82.107
+R@8 : 89.332
+R@16 : 93.754
+R@32 : 96.776
+
+
+
+
+
+
+
+Train Epoch: 3 [62/65 (94%)] Loss: 9.554012: : 62it [00:14,  4.38it/s]
+
+Train Epoch: 3 [65/65 (98%)] Loss: 9.745003: : 65it [00:15,  4.14it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 64.348
+R@2 : 75.101
+R@4 : 83.609
+R@8 : 90.125
+R@16 : 94.429
+R@32 : 96.978
+
+
+
+
+
+
+Train Epoch: 4 [55/65 (83%)] Loss: 9.047256: : 55it [00:12,  4.32it/s]
+
+
+Train Epoch: 4 [65/65 (98%)] Loss: 9.169195: : 65it [00:15,  4.25it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 65.311
+Train Epoch: 5 [1/65 (0%)] Loss: 8.680159: : 1it [00:00,  1.34it/s]
+R@2 : 76.165
+R@4 : 84.284
+R@8 : 90.682
+R@16 : 94.733
+
+
+
+
+
+
+
+Train Epoch: 5 [64/65 (97%)] Loss: 9.227523: : 64it [00:14,  4.62it/s]
+
+Train Epoch: 5 [65/65 (98%)] Loss: 8.485661: : 65it [00:15,  4.29it/s]
+0it [00:00, ?it/s]
+Computing t-SNE embedding
+R@1 : 64.585
+Train Epoch: 6 [2/65 (2%)] Loss: 8.263844: : 2it [00:00,  2.30it/s]
+R@2 : 75.608
+R@4 : 84.217
+R@8 : 90.243
+R@16 : 94.429
+
+
+
+
+
+
+
+Train Epoch: 6 [65/65 (98%)] Loss: 7.674914: : 65it [00:14,  4.46it/s]
+
+Train Epoch: 6 [65/65 (98%)] Loss: 7.674914: : 65it [00:15,  4.30it/s]
+Computing t-SNE embedding
+R@1 : 65.935
+0it [00:00, ?it/s]
+R@2 : 77.093
+R@4 : 85.196
+R@8 : 91.121
+R@16 : 94.818
+R@32 : 97.080
+
+
+
+
+
+
+Train Epoch: 7 [55/65 (83%)] Loss: 7.446248: : 55it [00:12,  4.42it/s]
+
+
+Train Epoch: 7 [65/65 (98%)] Loss: 6.896588: : 65it [00:15,  4.29it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 66.087
+R@2 : 76.739
+R@4 : 84.537
+R@8 : 90.378
+R@16 : 94.564
+R@32 : 97.113
+
+
+
+
+
+
+
+Train Epoch: 8 [65/65 (98%)] Loss: 6.826518: : 65it [00:15,  4.35it/s]
+
+Train Epoch: 8 [65/65 (98%)] Loss: 6.826518: : 65it [00:15,  4.23it/s]
+Computing t-SNE embedding
+R@1 : 66.391
+0it [00:00, ?it/s]
+R@2 : 77.380
+R@4 : 85.466
+R@8 : 91.458
+R@16 : 95.037
+R@32 : 97.232
+
+
+
+
+
+
+
+
+Train Epoch: 9 [65/65 (98%)] Loss: 6.580535: : 65it [00:15,  4.27it/s]
+**Evaluating...**
+Computing t-SNE embedding
+R@1 : 66.070
+0it [00:00, ?it/s]
+R@2 : 77.279
+R@4 : 85.213
+R@8 : 91.188
+R@16 : 94.936
+R@32 : 97.147
+
+
+
+
+
+
+
+Train Epoch: 10 [60/65 (91%)] Loss: 6.286567: : 60it [00:14,  4.06it/s]
+
+Train Epoch: 10 [65/65 (98%)] Loss: 6.006227: : 65it [00:16,  4.01it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+Train Epoch: 11 [3/65 (3%)] Loss: 6.303903: : 3it [00:01,  2.87it/s]
+R@1 : 65.817
+R@2 : 76.941
+R@4 : 85.668
+R@8 : 91.543
+R@16 : 94.919
+
+
+
+
+
+
+
+
+Train Epoch: 11 [65/65 (98%)] Loss: 6.118490: : 65it [00:16,  4.04it/s]
+**Evaluating...**
+0it [00:00, ?it/s]
+Computing t-SNE embedding
+R@1 : 66.070
+R@2 : 76.958
+R@4 : 85.668
+R@8 : 91.560
+R@16 : 95.003
+R@32 : 97.113
+
+
+
+
+
+
+
+Train Epoch: 12 [61/65 (92%)] Loss: 5.591299: : 61it [00:15,  4.30it/s]
+
+Train Epoch: 12 [65/65 (98%)] Loss: 5.915058: : 65it [00:16,  4.03it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+0it [00:00, ?it/s]
+R@1 : 66.425
+R@2 : 77.532
+R@4 : 85.770
+R@8 : 91.172
+R@16 : 94.953
+
+
+
+
+
+
+
+
+Train Epoch: 13 [65/65 (98%)] Loss: 6.025010: : 65it [00:16,  4.01it/s]
+**Evaluating...**
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+0it [00:00, ?it/s]
+R@1 : 66.948
+R@2 : 77.785
+R@4 : 86.023
+R@8 : 91.408
+R@16 : 95.290
+
+
+
+
+
+
+
+
+Train Epoch: 14 [64/65 (97%)] Loss: 5.959713: : 64it [00:16,  4.06it/s]
+
+Train Epoch: 14 [65/65 (98%)] Loss: 6.001693: : 65it [00:16,  3.84it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 66.864
+R@2 : 77.667
+R@4 : 85.280
+R@8 : 91.323
+R@16 : 95.138
+R@32 : 97.502
+
+
+
+
+
+
+
+Train Epoch: 15 [59/65 (89%)] Loss: 5.952150: : 59it [00:14,  4.20it/s]
+
+Train Epoch: 15 [65/65 (98%)] Loss: 5.722755: : 65it [00:16,  3.97it/s]
+0it [00:00, ?it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 67.573
+R@2 : 78.342
+R@4 : 86.327
+R@8 : 91.594
+R@16 : 95.189
+
+
+
+
+
+
+
+Train Epoch: 16 [58/65 (88%)] Loss: 5.640217: : 58it [00:14,  4.27it/s]
+
+Train Epoch: 16 [65/65 (98%)] Loss: 5.978450: : 65it [00:16,  3.90it/s]
+Computing t-SNE embedding
+0it [00:00, ?it/s]
+R@1 : 67.708
+R@2 : 78.460
+R@4 : 86.310
+R@8 : 91.813
+R@16 : 95.240
+R@32 : 97.451
+
+
+
+
+
+
+
+Train Epoch: 17 [61/65 (92%)] Loss: 5.720421: : 61it [00:14,  4.09it/s]
+
+Train Epoch: 17 [65/65 (98%)] Loss: 5.483734: : 65it [00:15,  4.08it/s]
+Traceback (most recent call last):
+  File "train.py", line 505, in <module>
+    main()
+  File "train.py", line 462, in main
+    Recalls = utils.evaluate_cos(model, dl_ev)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 85, in evaluate_cos
+    X, T, path = predict_batchwise1(model, dataloader)
+  File "/home/wyf/Proxy_Anchor/utils.py", line 65, in predict_batchwise1
+    X, Y, Z = zip(*[[x, y, z] for X, Y, Z in dataloader for x, y, z in zip(model(X.cuda()).cpu(), Y, Z)])
+  File "/home/wyf/Proxy_Anchor/utils.py", line 65, in <listcomp>
+    X, Y, Z = zip(*[[x, y, z] for X, Y, Z in dataloader for x, y, z in zip(model(X.cuda()).cpu(), Y, Z)])
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1171, in _next_data
+    self._shutdown_workers()
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/site-packages/torch/utils/data/dataloader.py", line 1297, in _shutdown_workers
+    w.join(timeout=_utils.MP_STATUS_CHECK_INTERVAL)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/multiprocessing/popen_fork.py", line 44, in wait
+    if not wait([self.sentinel], timeout):
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/multiprocessing/connection.py", line 931, in wait
+    ready = selector.select(timeout)
+  File "/home/wyf/anaconda3/envs/proxyanchor/lib/python3.8/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+KeyboardInterrupt
