@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description=
 )
 # export directory, training and val datasets, test datasets
 parser.add_argument('--LOG_DIR', 
-    default='./Proxy_Anchor/Newlogs',
+    default='./AMDML/logs',
     help = 'Path to log folder'
 )
 parser.add_argument('--dataset', 
@@ -53,7 +53,7 @@ parser.add_argument('--workers', default = 2, type = int,
 parser.add_argument('--model', default = 'bn_inception',
     help = 'Model for training'
 )
-parser.add_argument('--loss', default = 'Proxy_Anchor',
+parser.add_argument('--loss', default = 'AMLoss',
     help = 'Criterion for training'
 )
 
@@ -110,7 +110,6 @@ parser.add_argument('--l2-norm', default = 1, type = int,
 parser.add_argument('--remark', default = '',
     help = 'Any reamrk'
 )
-
 parser.add_argument('--delta',  default=0.1, type = float,
     help='delta in proxy&proxy')
 parser.add_argument('--lam',  default=1.0, type = float,
@@ -137,7 +136,7 @@ def main():
                                                                                                  args.delta,
                                                                                                  args.lam)
     # Wandb Initialization
-   # wandb.init(project=args.dataset + '_ProxyAnchor', notes=LOG_DIR)
+   # wandb.init(project=args.dataset + '_AMDML', notes=LOG_DIR)
    # wandb.config.update(args)
     data_root = os.path.join('/media/', 'wyf')  # wyf
 
@@ -265,8 +264,8 @@ def main():
         model = nn.DataParallel(model)
 
     # DML Losses
-    if args.loss == 'Proxy_Anchor':
-        criterion = losses.Proxy_Anchor(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alphap=args.alphap,alphan=args.alphan, delta=args.delta, T=args.T, lam=args.lam).cuda()
+    if args.loss == 'AMLoss':
+        criterion = losses.AMLoss(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alphap=args.alphap,alphan=args.alphan, delta=args.delta, lam=args.lam).cuda()
     elif args.loss == 'Proxy_Anchor_origin':
         criterion = losses.Proxy_Anchor_origin(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alpha=args.alphap).cuda()
     elif args.loss == 'Circle':
@@ -300,7 +299,7 @@ def main():
             'params': model.model.embedding.parameters() if args.gpu_id != -1 else model.module.model.embedding.parameters(),
             'lr': float(args.lr) * 1},
     ]
-    if args.loss == 'Proxy_Anchor':
+    if args.loss == 'AMLoss':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
         mrg_param=[{'params': criterion.mrg_list, 'lr': float(args.mrg_lr) }]
         #param_groups.append({'params': criterion.alpha_list, 'lr': float(args.lr) * 100})
@@ -331,11 +330,11 @@ def main():
                                   momentum=0.9)
     elif args.optimizer == 'adamw':
         opt = torch.optim.AdamW(param_groups, lr=float(args.lr), weight_decay = args.weight_decay)
-        if args.loss == 'Proxy_Anchor':
+        if args.loss == 'AMLoss':
             mrg_opt = torch.optim.AdamW(mrg_param, lr=float(args.mrg_lr), weight_decay = args.weight_decay)
 
     scheduler = torch.optim.lr_scheduler.StepLR(opt, step_size=args.lr_decay_step, gamma=args.lr_decay_gamma)
-    if args.loss == 'Proxy_Anchor':
+    if args.loss == 'AMLoss':
         mrg_scheduler = torch.optim.lr_scheduler.StepLR(mrg_opt, step_size=args.mrg_lr_decay_step, gamma=args.mrg_lr_decay_gamma)
     print("Training parameters: {}".format(vars(args)))
     print("Training for {} epochs.".format(args.nb_epochs))
@@ -385,11 +384,11 @@ def main():
                 loss = criterion(m, y.squeeze().cuda())
 
             opt.zero_grad()
-            if args.loss == 'Proxy_Anchor':
+            if args.loss == 'AMLoss':
                 mrg_opt.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_value_(model.parameters(), 10)
-            if args.loss == 'Proxy_Anchor':
+            if args.loss == 'AMLoss':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'Proxy_Anchor_origin':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
@@ -401,7 +400,7 @@ def main():
                 torch.nn.utils.clip_grad_value_(criterion.loss_func.beta, 10)
             losses_per_epoch.append(loss.data.cpu().numpy())
             opt.step()
-            if args.loss == 'Proxy_Anchor':
+            if args.loss == 'AMLoss':
                 mrg_opt.step()
             pbar.set_description(
                 'Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}'.format(
@@ -412,7 +411,7 @@ def main():
         losses_list.append(np.mean(losses_per_epoch))
        # wandb.log({'loss': losses_list[-1]}, step=epoch)
         scheduler.step()
-        if args.loss == 'Proxy_Anchor':
+        if args.loss == 'AMLoss':
             mrg_scheduler.step()
         if (epoch >= 0):
             with torch.no_grad():
@@ -461,7 +460,6 @@ def main():
                             f.write("Best Recall@{}: {:.4f}\n".format(K, best_recall[i] * 100))
                     elif args.dataset == 'market':
                         f.write("Best Recall@{}: {:.4f}\n".format(1, best_recall[0] * 100))
-                        f.write("Best mAp@: {:.4f}\n".format(best_recall[1] * 100))
                     elif args.dataset != 'SOP':
                         for i in range(6):
                             f.write("Best Recall@{}: {:.4f}\n".format(2 ** i, best_recall[i] * 100))

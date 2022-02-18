@@ -29,8 +29,8 @@ def l2_norm(input):
     return output
 
 
-class Proxy_Anchor(torch.nn.Module):
-    def __init__(self, nb_classes, sz_embed, mrg=0.1, alphap=32, alphan=32, delta=-0.1, T=1.0, lam = 1.0):
+class AMLoss(torch.nn.Module):
+    def __init__(self, nb_classes, sz_embed, mrg=0.1, alphap=32, alphan=32, delta=-0.1, lam = 1.0):
         torch.nn.Module.__init__(self)
         # Proxy Anchor Initialization
         """
@@ -47,9 +47,8 @@ class Proxy_Anchor(torch.nn.Module):
         self.mrgn = mrg
         self.alphap = alphap
         self.alphan = alphan
-        self.mrg_list = 0.1
+        self.mrg_list = mrg
         self.delta = delta
-        self.T = T
         self.lam = lam
         self.initialize_mrg(self.mrg_list, nb_classes)
         
