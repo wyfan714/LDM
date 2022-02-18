@@ -115,11 +115,37 @@ class AMLoss(torch.nn.Module):
 class sml(torch.nn.Module):
     def __init__(self, nb_classes, sz_embed):
         torch.nn.Module.__init__(self)
-        self.proxies = torch.nn.Parameter(torch.Tensor(nb_classed, sz_embed))
+        self.proxies = torch.nn.Parameter(torch.Tensor(nb_classes, sz_embed))
         self.n_classes = nb_classes
-
-    def forward(self, X, target):
+        self.mu = torch.nn.Parameter(torch.Tensor(nb_classes))
+        self.nv = torch.nn.Parameter(torch.Tensor(nb_classes))
+        self.lam = 0.1
+    def forward(self, X, labels):
         D = torch.cdist(X, X)
+        batch_size = X.size(0)
+        loss = list()
+        for i in range(batch_size):
+            pos_pair = D[i][labels == labels[i]]
+            neg_pair = D[i][labels != labels[i]]
+            pos_index = labels == labels[i]
+            neg_index = labels != labels[i]
+            for j in range(pos_index.size(0)):
+                if j == i:
+                    continue
+                for k in range(neg_index.size(0)):
+                    loss1 = torch.max(D[i][j] - D[i][k] + mu[labels[i]], 0)
+                    loss2 = torch.max(D[i][j] - D[j][k] + nv[labels[i]], 0)
+                    loss.append(loss1)
+                    loss.append(self.lam * loss2)
+        loss1 = torch.sum(mu)
+        loss2 = torch.sum(nv)
+        loss.append(-1 * loss1 / self.nb_classes)
+        loss.append(-1 * loss2 / self.nb_classes)
+        return loss
+
+
+
+
 
 
 

@@ -76,14 +76,11 @@ def calc_map_at_k(T, Y, k):
     return map / len(T)
 
 def evaluate_map(model, dataloader):
-    nb_classes = dataloader.dataset.nb_classes()
     X, T, path = predict_batchwise(model, dataloader)
     X = l2_norm(X)
     K = 50
     Y = []
-    xs = []
     cos_sim = F.linear(X, X)
-    batch_size = X.size(0)
     Y = T[cos_sim.topk(1 + K)[1][:, 1:]]
     Y = Y.float().cpu()
     map = calc_map_at_k(T, Y, K)
