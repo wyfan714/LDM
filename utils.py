@@ -78,13 +78,14 @@ def calc_map_at_k(T, Y, k):
 def evaluate_map(model, dataloader):
     X, T, path = predict_batchwise(model, dataloader)
     X = l2_norm(X)
-    K = 50
+    K = 20
     Y = []
     cos_sim = F.linear(X, X)
     Y = T[cos_sim.topk(1 + K)[1][:, 1:]]
     Y = Y.float().cpu()
     map = calc_map_at_k(T, Y, K)
     print("map@{}:{:.3f}".format(K, 100 * map))
+    return map
 
 def proxy_init_calc(model, dataloader):
     nb_classes = dataloader.dataset.nb_classes()

@@ -30,7 +30,7 @@ def l2_norm(input):
 
 
 class AMLoss(torch.nn.Module):
-    def __init__(self, nb_classes, sz_embed, mrg=0.1, alphap=32, alphan=32, delta=-0.1, lam = 1.0):
+    def __init__(self, nb_classes, sz_embed, mrg = 0.1, alphap = 32, alphan = 32, delta = 0.1, lam = 1.0):
         torch.nn.Module.__init__(self)
         # Proxy Anchor Initialization
         """
@@ -78,9 +78,9 @@ class AMLoss(torch.nn.Module):
         norm_mrg_list = self.mrg_list.reshape(1, -1)
         #norm_mrg_list[with_neg_proxies].detach()
         pos_exp = torch.exp(-self.alphap  *  (cos - norm_mrg_list))       
-        #neg_exp = torch.exp(self.alphan  * (cos + self.mrgn))
-        neg_exp = torch.exp(32 * (cos - norm_mrg_list + 0.05))
-        print(norm_mrg_list)
+        neg_exp = torch.exp(self.alphan  * (cos + self.mrgn))
+        #neg_exp = torch.exp(32 * (cos - norm_mrg_list + 0.05))
+        #print(norm_mrg_list)
         with_pos_proxies = torch.nonzero(P_one_hot.sum(dim=0) != 0).squeeze(dim=1)  # The set of positive proxies of data in the batch
         num_valid_proxies = len(with_pos_proxies)  # The number of positive proxies
         cos_one_hot = torch.eye(self.nb_classes).cuda()
@@ -115,36 +115,36 @@ class AMLoss(torch.nn.Module):
 class sml(torch.nn.Module):
     def __init__(self, nb_classes, sz_embed):
         torch.nn.Module.__init__(self)
-        self.proxies = torch.nn.Parameter(torch.Tensor(nb_classes, sz_embed))
         self.n_classes = nb_classes
-        self.mu = torch.nn.Parameter(torch.Tensor(nb_classes))
-        self.nv = torch.nn.Parameter(torch.Tensor(nb_classes))
+        mrg = 0.1
+        self.mrg_list = torch.ones(nb_classes) * mrg
+        self.mu = torch.nn.Parameter(self.mrg_list)
+        self.nv = torch.nn.Parameter(self.mrg_list)
         self.lam = 0.1
     def forward(self, X, labels):
         D = torch.cdist(X, X)
         batch_size = X.size(0)
         loss = list()
         for i in range(batch_size):
-            pos_pair = D[i][labels == labels[i]]
-            neg_pair = D[i][labels != labels[i]]
+            #pos_pair = D[i][labels == labels[i]]
+            #neg_pair = D[i][labels != labels[i]]
             pos_index = labels == labels[i]
             neg_index = labels != labels[i]
             for j in range(pos_index.size(0)):
                 if j == i:
                     continue
                 for k in range(neg_index.size(0)):
-                    loss1 = torch.max(D[i][j] - D[i][k] + mu[labels[i]], 0)
-                    loss2 = torch.max(D[i][j] - D[j][k] + nv[labels[i]], 0)
-                    loss.append(loss1)
-                    loss.append(self.lam * loss2)
-        loss1 = torch.sum(mu)
-        loss2 = torch.sum(nv)
+                    loss1 = D[i][j] - D[i][k] + self.mu[labels[i]]
+                    loss2 = D[i][j] - D[j][k] + self.nv[labels[i]]
+                    if loss1 > 0:
+                        loss.append(loss1)
+                    if loss2 > 0:
+                        loss.append(self.lam * loss2)
+        loss1 = torch.sum(self.mu)
+        loss2 = torch.sum(self.nv)
         loss.append(-1 * loss1 / self.nb_classes)
         loss.append(-1 * loss2 / self.nb_classes)
         return loss
-
-
-
 
 
 
@@ -254,20 +254,12 @@ class PsPa(nn.Module):
         
         return loss
 
-class Proxy_Anchor_origin(torch.nn.Module):
+class Proxy_Anchor(torch.nn.Module):
     def __init__(self, nb_classes, sz_embed, mrg=0.5, alpha=4):
         torch.nn.Module.__init__(self)
         # Proxy Anchor Initialization
-        """
-        nb_classes:100
-        sz_embed:512
-
-        mrg :阈值
-        .cuda()：把tensor放到GPU上
-        """
         self.proxies = torch.nn.Parameter(torch.randn(nb_classes, sz_embed).cuda())
         nn.init.kaiming_normal_(self.proxies, mode='fan_out')
-        # self.weight = dealweight(nb_classes)
         self.nb_classes = nb_classes
         self.sz_embed = sz_embed
         self.mrg = mrg
@@ -275,28 +267,20 @@ class Proxy_Anchor_origin(torch.nn.Module):
 
     def forward(self, X, T):
         P = self.proxies
-        """
-        F.linear:定义全链接层
-        """
         cos = F.linear(l2_norm(X), l2_norm(P))  # Calculate cosine similarity
         P_one_hot = binarize(T=T, nb_classes=self.nb_classes)
         N_one_hot = 1 - P_one_hot
-
         pos_exp = torch.exp(-self.alpha * (cos - self.mrg))
-
         neg_exp = torch.exp(self.alpha * (cos + self.mrg))
         with_pos_proxies = torch.nonzero(P_one_hot.sum(dim=0) != 0).squeeze(
             dim=1)  # The set of positive proxies of data in the batch
         num_valid_proxies = len(with_pos_proxies)  # The number of positive proxies
-
         P_sim_sum = torch.where(P_one_hot == 1, pos_exp, torch.zeros_like(pos_exp)).sum(dim=0)
         N_sim_sum = torch.where(N_one_hot == 1, neg_exp, torch.zeros_like(neg_exp)).sum(dim=0)
         pos_term = torch.log(1 + P_sim_sum).sum() / num_valid_proxies
-
         neg_term = torch.log(1 + N_sim_sum).sum() / self.nb_classes
         loss = pos_term + neg_term
         return loss
-
 
 
 class CircleLoss(torch.nn.Module):

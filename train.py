@@ -85,10 +85,10 @@ parser.add_argument('--mrg-lr-decay-step', default = 10, type =int,
 parser.add_argument('--mrg-lr-decay-gamma', default = 0.5, type =float,
     help = 'dynamic mrg Learning decay gamma setting'
 )
-parser.add_argument('--alphap', default = 48, type = float,
+parser.add_argument('--alphap', default = 32, type = float,
     help = 'Positive Scaling Parameter setting'
 )
-parser.add_argument('--alphan', default = 48, type = float,
+parser.add_argument('--alphan', default = 32, type = float,
     help = 'Negative Scaling Parameter setting'
 )
 parser.add_argument('--mrg', default = 0.1, type = float,
@@ -110,10 +110,10 @@ parser.add_argument('--l2-norm', default = 1, type = int,
 parser.add_argument('--remark', default = '',
     help = 'Any reamrk'
 )
-parser.add_argument('--delta',  default=0.1, type = float,
-    help='delta in proxy&proxy')
-parser.add_argument('--lam',  default=1.0, type = float,
-    help='lambda in proxy&proxy')
+parser.add_argument('--delta',  default = 0.1, type = float,
+    help ='delta in proxy&proxy')
+parser.add_argument('--lam',  default = 1.0, type = float,
+    help ='lambda in proxy&proxy')
 
 
 args = parser.parse_args()
@@ -265,11 +265,13 @@ def main():
 
     # DML Losses
     if args.loss == 'AMLoss':
-        criterion = losses.AMLoss(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alphap=args.alphap,alphan=args.alphan, delta=args.delta, lam=args.lam).cuda()
-    elif args.loss == 'Proxy_Anchor_origin':
-        criterion = losses.Proxy_Anchor_origin(nb_classes=nb_classes, sz_embed=args.sz_embedding,mrg=args.mrg, alpha=args.alphap).cuda()
+        criterion = losses.AMLoss(nb_classes=nb_classes, sz_embed=args.sz_embedding, mrg=args.mrg, alphap=args.alphap, alphan=args.alphan, delta=args.delta, lam=args.lam).cuda()
+    elif args.loss == 'Proxy_Anchor':
+        criterion = losses.Proxy_Anchor(nb_classes = nb_classes, sz_embed = args.sz_embedding,mrg = args.mrg, alpha = args.alphap).cuda()
     elif args.loss == 'Circle':
         criterion = losses.CircleLoss(m = 0.4, gamma = 80 ).cuda()
+    elif args.loss == 'sml':
+        criterion = losses.sml(nb_classes = nb_classes, sz_embed = args.sz_embedding)
     elif args.loss == 'ProxyGML':
         criterion = losses.ProxyGML(C=nb_classes, N=args.N, dim=args.sz_embedding,weight_lambda=args.weight_lambda, r=args.r).cuda()
     elif args.loss == 'Proxy_NCA':
@@ -302,11 +304,11 @@ def main():
     if args.loss == 'AMLoss':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
         mrg_param=[{'params': criterion.mrg_list, 'lr': float(args.mrg_lr) }]
-        #param_groups.append({'params': criterion.alpha_list, 'lr': float(args.lr) * 100})
-    if args.loss == 'Proxy_Anchor_origin':
+    if args.loss == 'Proxy_Anchor':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
-    if args.loss == 'PsPa':
-        param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
+    if args.loss == 'sml':
+        param_groups.append({'params': criterion.mu, 'lr': float(args.lr) * 100})
+        param_groups.append({'params': criterion.nv, 'lr': float(args.lr) * 100})
     if args.loss == 'Proxywyf':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
         param_groups.append({'params': criterion.mrg_list, 'lr': float(args.lr) * 5})
@@ -314,7 +316,7 @@ def main():
         param_groups.append({'params': criterion.Proxies, 'lr': float(args.lr) * 100})
     if args.loss == 'SoftTripleLoss':
         param_groups.append({'params': criterion.loss_func.fc, 'lr': float(args.lr) * 100})
-    if args.loss == 'ProxyAnchorLoss':#+*
+    if args.loss == 'ProxyAnchorLoss':
         param_groups.append({'params': criterion.loss_func.proxies, 'lr': float(args.lr) * 100})
     if args.loss == 'MarginLoss':
         param_groups.append({'params': criterion.loss_func.beta, 'lr': float(args.lr) * 100})
@@ -390,7 +392,9 @@ def main():
             torch.nn.utils.clip_grad_value_(model.parameters(), 10)
             if args.loss == 'AMLoss':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
-            if args.loss == 'Proxy_Anchor_origin':
+            if args.loss == 'Proxy_Anchor':
+                torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
+            if args.loss == 'sml':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'Proxywyf':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
@@ -443,6 +447,8 @@ def main():
             # Best model save
             if best_map < MAP:
                 best_map = MAP
+                if not os.path.exists('{}'.format(LOG_DIR)):
+                    os.makedirs('{}'.format(LOG_DIR))
                 with open('{}/{}_{}_best_map.txt'.format(LOG_DIR, args.dataset, args.model), 'w') as f:
                     f.write('best epoch: {}\n'.format(epoch))
                     f.write('best map: {}\n'.format(best_map))
