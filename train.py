@@ -2,7 +2,7 @@ import torch, math, time, argparse, os
 import random, dataset, utils, losses, net
 import numpy as np
 from dataset.Inshop import Inshop_Dataset
-from dataset.market import market1501
+from torchvision import datasets, transforms
 from net.resnet import *
 from net.googlenet import *
 from net.bn_inception import *
@@ -29,7 +29,7 @@ parser.add_argument('--LOG_DIR',
 )
 parser.add_argument('--dataset', 
     default='cars',
-    help = 'Training dataset, e.g. cub, cars, SOP, Inshop'
+    help = 'Training dataset, e.g. cub, cars, SOP, Inshop, market, msmt, duke, ucmd, aid, pattern'
 )
 parser.add_argument('--embedding-size', default = 512, type = int,
     dest = 'sz_embedding',
@@ -51,7 +51,7 @@ parser.add_argument('--workers', default = 2, type = int,
     help = 'Number of workers for dataloader.'
 )
 parser.add_argument('--model', default = 'bn_inception',
-    help = 'Model for training'
+    help = 'Model for training, resnet50'
 )
 parser.add_argument('--loss', default = 'AMLoss',
     help = 'Criterion for training'
@@ -115,6 +115,10 @@ parser.add_argument('--delta',  default = 0.1, type = float,
 parser.add_argument('--lam',  default = 1.0, type = float,
     help ='lambda in proxy&proxy')
 
+parser.add_argument('--train_all', default = 1, type = int,
+    help = ''
+)
+
 
 args = parser.parse_args()
 def main():
@@ -135,20 +139,23 @@ def main():
                                                                                                  args.nb_epochs,
                                                                                                  args.delta,
                                                                                                  args.lam)
+
+    
+
     # Wandb Initialization
    # wandb.init(project=args.dataset + '_AMDML', notes=LOG_DIR)
    # wandb.config.update(args)
     data_root = os.path.join('/media/', 'wyf')  # wyf
-
     # Dataset Loader and Sampler
-    if args.dataset == 'market':
-        trn_dataset = market1501(
+    if args.dataset == 'market' or args.dataset == 'msmt' or args == 'duke':
+        trn_dataset = dataset.load(
+                name = args.dataset,
                 root = data_root,
                 mode = 'train',
                 transform = dataset.utils.make_transform(
-                    is_train = True, 
+                    is_train = True,
                     is_inception = (args.model == 'bn_inception')
-                ))
+                    ))
     elif args.dataset == 'Inshop':
         trn_dataset = Inshop_Dataset(
                 root = data_root,
@@ -221,6 +228,22 @@ def main():
             num_workers = args.nb_workers,
             pin_memory = True
         )
+    elif args.dataset == 'market' or args.dataset == 'msmt' or args.dataset == 'duke':
+        ev_dataset = dataset.load(
+                name = args.dataset,
+                root = data_root,
+                mode = 'eval',
+                transform = dataset.utils.make_transform(
+                    is_train = False,
+                    is_inception = (args.model == 'bn_inception')
+                    ))
+        dl_ev = torch.utils.data.DataLoader(
+            ev_dataset,
+            batch_size = args.sz_batch,
+            shuffle = False,
+            num_workers = args.nb_workers,
+            pin_memory = True
+        )
     else:
         ev_dataset = dataset.load(
                 name = args.dataset,
@@ -238,9 +261,8 @@ def main():
             num_workers = args.nb_workers,
             pin_memory = True
         )
-    
     nb_classes = trn_dataset.nb_classes()
-
+    
 
     # Backbone Model
     if args.model.find('googlenet') + 1:
@@ -271,7 +293,7 @@ def main():
     elif args.loss == 'Circle':
         criterion = losses.CircleLoss(m = 0.4, gamma = 80 ).cuda()
     elif args.loss == 'sml':
-        criterion = losses.sml(nb_classes = nb_classes, sz_embed = args.sz_embedding)
+        criterion = losses.sml(nb_classes = nb_classes, sz_embed = args.sz_embedding).cuda()
     elif args.loss == 'ProxyGML':
         criterion = losses.ProxyGML(C=nb_classes, N=args.N, dim=args.sz_embedding,weight_lambda=args.weight_lambda, r=args.r).cuda()
     elif args.loss == 'Proxy_NCA':
@@ -342,8 +364,9 @@ def main():
     print("Training for {} epochs.".format(args.nb_epochs))
     losses_list = []
     best_recall = [0]
-    best_map = 0
+    best_rp = 0
     best_epoch = 0
+    best_mapr = 0
 
     for epoch in range(0, args.nb_epochs):
         model.train()
@@ -366,25 +389,22 @@ def main():
             if epoch == 0:
                 for param in list(set(model.parameters()).difference(set(unfreeze_model_param))):
                     param.requires_grad = False
-                #criterion.mrg_list.requires_grad = False
             if epoch == args.warm:
                 for param in list(set(model.parameters()).difference(set(unfreeze_model_param))):
                     param.requires_grad = True
-                #criterion.mrg_list.requires_grad = True
-        #if epoch == 20:
-         #   criterion.mrg_list.requires_grad = False
-        # if epoch % 2 == 0:
-        #     criterion.mrg_list.requires_grad = False
-
+        
+       # if epoch == 0:
+       #     criterion.mrg_list.requires_grad = False
+       # if epoch == 5:
+       #     criterion.mrg_list.requires_grad - True
         pbar = tqdm(enumerate(dl_tr))
-
         for batch_idx, (x, y, path) in pbar:
             m = model(x.squeeze().cuda())
             if args.loss == 'ProxyGML':
                 loss, loss_samples = criterion(m, y.squeeze().cuda())
             else:
                 loss = criterion(m, y.squeeze().cuda())
-
+    
             opt.zero_grad()
             if args.loss == 'AMLoss':
                 mrg_opt.zero_grad()
@@ -407,10 +427,10 @@ def main():
             if args.loss == 'AMLoss':
                 mrg_opt.step()
             pbar.set_description(
-                'Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}'.format(
-                    epoch, batch_idx + 1, len(dl_tr),
-                           100. * batch_idx / len(dl_tr),
-                    loss.item()))
+                    'Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}'.format(
+                        epoch, batch_idx + 1, len(dl_tr),
+                               100. * batch_idx / len(dl_tr),
+                        loss.item()))
 
         losses_list.append(np.mean(losses_per_epoch))
        # wandb.log({'loss': losses_list[-1]}, step=epoch)
@@ -421,14 +441,11 @@ def main():
             with torch.no_grad():
                 print("**Evaluating...**")
                 if args.dataset == 'Inshop':
-                    Recalls = utils.evaluate_cos_Inshop(model, dl_query, dl_gallery)
-                elif args.dataset == 'market':
-                    Recalls = utils.evaluate_cos_Market(model, dl_query, dl_gallery)
+                    Recalls,rp, mapr = utils.evaluate_cos_Inshop(model, dl_query, dl_gallery)
                 elif args.dataset != 'SOP':
-                    MAP = utils.evaluate_map(model, dl_ev)
-                    Recalls = utils.evaluate_cos(model, dl_ev)
+                    Recalls, rp, mapr = utils.evaluate_cos(model, dl_ev)
                 else:
-                    Recalls = utils.evaluate_cos_SOP(model, dl_ev)
+                    Recalls, rp, mapr = utils.evaluate_cos_SOP(model, dl_ev)
 
             # Logging Evaluation Score
            # if args.dataset == 'Inshop':
@@ -445,13 +462,20 @@ def main():
              #        wandb.log({"R@{}".format(10**i): Recalls[i]}, step=epoch)
 
             # Best model save
-            if best_map < MAP:
-                best_map = MAP
+            if best_rp < rp:
+                best_rp = rp
                 if not os.path.exists('{}'.format(LOG_DIR)):
                     os.makedirs('{}'.format(LOG_DIR))
-                with open('{}/{}_{}_best_map.txt'.format(LOG_DIR, args.dataset, args.model), 'w') as f:
+                with open('{}/{}_{}_best_rp.txt'.format(LOG_DIR, args.dataset, args.model), 'w') as f:
                     f.write('best epoch: {}\n'.format(epoch))
-                    f.write('best map: {}\n'.format(best_map))
+                    f.write('best rp: {}\n'.format(best_rp))
+            if best_mapr < mapr:
+                best_mapr = mapr
+                if not os.path.exists('{}'.format(LOG_DIR)):
+                    os.makedirs('{}'.format(LOG_DIR))
+                with open('{}/{}_{}_best_mapr.txt'.format(LOG_DIR, args.dataset, args.model), 'w') as f:
+                    f.write('best epoch: {}\n'.format(epoch))
+                    f.write('best mapr: {}\n'.format(best_mapr))
             if best_recall[0] < Recalls[0]:
                 best_recall = Recalls
                 best_epoch = epoch

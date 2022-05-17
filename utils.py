@@ -34,6 +34,7 @@ def calc_recall_at_k(T, Y, k):
     return s / (1. * len(T))
 
 
+
 def predict_batchwise(model, dataloader):
     device = "cuda"
     model_is_training = model.training
@@ -60,6 +61,7 @@ def predict_batchwise(model, dataloader):
     A[1] = torch.stack(A[1])
     return [A[0], A[1], A[2]]
 
+
 def calc_map_at_k(T, Y, k):
     map = 0
     for t,y in zip(T, Y):
@@ -71,9 +73,21 @@ def calc_map_at_k(T, Y, k):
             if t == y[i]:
                 s += 1
                 ap += s / cnt
-        if s != 0:
-            map += ap / s
+        map += ap / k
     return map / len(T)
+
+
+def calc_rp_at_k(T, Y, k):
+    rp = 0
+    for t, y in zip(T, Y):
+        cnt = 0
+        for i in range(k):
+            if t == y[i]:
+                cnt += 1
+        rp += cnt / k
+    return rp / len(T)
+
+
 
 def evaluate_map(model, dataloader):
     X, T, path = predict_batchwise(model, dataloader)
@@ -86,6 +100,38 @@ def evaluate_map(model, dataloader):
     map = calc_map_at_k(T, Y, K)
     print("map@{}:{:.3f}".format(K, 100 * map))
     return map
+
+def evaluate_map2(X, T):
+    #X, T, path = predict_batchwise(model, dataloader)
+    X = l2_norm(X)
+    cos_sim = F.linear(X, X)
+    mAp = 0
+    cos_sim = cos_sim.cpu().numpy()
+    T = T.cpu()
+    for i in range(X.size(0)):
+        index = np.argsort(cos_sim[i])
+        index = index[::-1]
+        # except
+        index = index[1:]
+        good_index = np.argwhere(T[i] == T)
+        mask = np.in1d(index, good_index)
+        rows_good = np.argwhere(mask == True)
+        rows_good = rows_good.flatten()
+        ngood = len(rows_good)
+        ap = 0
+        for j in range(ngood):
+            d_recall = 1.0 / ngood
+            precision = (j + 1) * 1.0 / (rows_good[j] + 1)
+            if rows_good[j] != 0:
+                old_precision = j * 1.0 / rows_good[j]
+            else:
+                old_precision = 1.0
+            ap = ap + d_recall * (old_precision + precision) / 2
+        mAp = mAp + ap
+    mAp = mAp / X.size(0)
+    print("map:{:.3f}".format(100 * mAp))
+    return mAp
+
 
 def proxy_init_calc(model, dataloader):
     nb_classes = dataloader.dataset.nb_classes()
@@ -118,12 +164,16 @@ def evaluate_cos(model, dataloader):
     #     for j in t[i]:
     #         paths[i].append(j)
     recall = []
+    #map = evaluate_map2(X,T)
+    mapr = calc_map_at_k(T, Y, 10)
+    rp = calc_rp_at_k(T, Y, 10)
     for k in [1, 2, 4, 8, 16, 32]:
         r_at_k = calc_recall_at_k(T, Y, k)
         recall.append(r_at_k)
         print("R@{} : {:.3f}".format(k, 100 * r_at_k))
 
-    return recall
+    return recall, rp, mapr
+
 
 def evaluate_cos_Inshop(model, query_dataloader, gallery_dataloader):
     nb_classes = query_dataloader.dataset.nb_classes()
@@ -167,6 +217,8 @@ def evaluate_cos_Inshop(model, query_dataloader, gallery_dataloader):
     # #ps = path[cos_sim.topk(1 + 4)[1][:,1:]]
     #draw_retrieval_inshop(query_path, gallery_path, indice, Y, query_T, dt_name)
     recall = []
+    mapr = calc_map_at_k(query_T, Y, 10)
+    rp = calc_rp_at_k(query_T, Y, 10)
     for k in [1, 10, 20, 30, 40, 50]:
         r_at_k = calc_recall_at_k(query_T, Y, k)
         recall.append(r_at_k)
@@ -176,7 +228,7 @@ def evaluate_cos_Inshop(model, query_dataloader, gallery_dataloader):
     #     recall.append(r_at_k)
     #     print("R@{} : {:.3f}".format(k, 100 * r_at_k))
 
-    return recall
+    return recall,rp,mapr
 
 def evaluate_cos_SOP(model, dataloader):
     nb_classes = dataloader.dataset.nb_classes()
@@ -215,12 +267,14 @@ def evaluate_cos_SOP(model, dataloader):
     indice = torch.cat(indice, dim=0)
     indice = indice.numpy().tolist()
     #draw_retrieval(path, indice, Y, T, dt_name)
+    mapr = calc_map_at_k(T, Y, 10)
+    rp = calc_rp_at_k(T, Y, 10)
     recall = []
     for k in [1, 10, 100, 1000]:
         r_at_k = calc_recall_at_k(T, Y, k)
         recall.append(r_at_k)
         print("R@{} : {:.3f}".format(k, 100 * r_at_k))
-    return recall
+    return recall,rp, mapr
 
 def plot_embedding(data, path):
 	x_min, x_max = np.min(data, 0), np.max(data, 0)

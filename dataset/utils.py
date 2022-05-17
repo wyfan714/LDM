@@ -64,6 +64,8 @@ class ScaleIntensities():
         return tensor
 
 
+
+
 def make_transform(is_train = True, is_inception = False):
     # Resolution Resize List : 256, 292, 361, 512
     # Resolution Crop List: 224, 256, 324, 448

@@ -4,13 +4,19 @@ from .SOP import SOP
 from .dog import DogsDataset
 from .import utils
 from .base import BaseDataset
-from .market import market1501
+from .ucmd import ucmd
+from .pat import pat
+from .aid import aid
+from .market import market
 
 _type = {
     'cars': Cars,
     'cub': CUBirds,
     'SOP': SOP,
-    'dog': DogsDataset
+    'ucmd': ucmd,
+    'aid': aid,
+    'pat': pat,
+    'market': market,
 }
 
 def load(name, root, mode, transform = None):
