@@ -19,7 +19,7 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed) # set random seed for all gpus
 
 parser = argparse.ArgumentParser(description=
-    'Official implementation of `Adaptive Margin in Deep Metric Learning`'  
+    'Official implementation of `Learnable Dynamic Margin in Deep Metric Learning`'  
     + 'Our code is modified from `https://github.com/tjddus9597/Proxy-Anchor-CVPR2020`'
 )
 # export directory, training and val datasets, test datasets
@@ -29,7 +29,7 @@ parser.add_argument('--LOG_DIR',
 )
 parser.add_argument('--dataset', 
     default='cars',
-    help = 'Training dataset, e.g. cub, cars, SOP, Inshop, market, msmt, duke, ucmd, aid, pattern'
+    help = 'Training dataset, e.g. cub, cars, SOP, Inshop, ucmd, aid, pattern'
 )
 parser.add_argument('--embedding-size', default = 512, type = int,
     dest = 'sz_embedding',
@@ -115,9 +115,6 @@ parser.add_argument('--delta',  default = 0.1, type = float,
 parser.add_argument('--lam',  default = 1.0, type = float,
     help ='lambda in proxy&proxy')
 
-parser.add_argument('--train_all', default = 1, type = int,
-    help = ''
-)
 
 
 args = parser.parse_args()
@@ -147,16 +144,7 @@ def main():
    # wandb.config.update(args)
     data_root = os.path.join('/media/', 'wyf')  # wyf
     # Dataset Loader and Sampler
-    if args.dataset == 'market' or args.dataset == 'msmt' or args == 'duke':
-        trn_dataset = dataset.load(
-                name = args.dataset,
-                root = data_root,
-                mode = 'train',
-                transform = dataset.utils.make_transform(
-                    is_train = True,
-                    is_inception = (args.model == 'bn_inception')
-                    ))
-    elif args.dataset == 'Inshop':
+    if args.dataset == 'Inshop':
         trn_dataset = Inshop_Dataset(
                 root = data_root,
                 mode = 'train',
@@ -228,22 +216,6 @@ def main():
             num_workers = args.nb_workers,
             pin_memory = True
         )
-    elif args.dataset == 'market' or args.dataset == 'msmt' or args.dataset == 'duke':
-        ev_dataset = dataset.load(
-                name = args.dataset,
-                root = data_root,
-                mode = 'eval',
-                transform = dataset.utils.make_transform(
-                    is_train = False,
-                    is_inception = (args.model == 'bn_inception')
-                    ))
-        dl_ev = torch.utils.data.DataLoader(
-            ev_dataset,
-            batch_size = args.sz_batch,
-            shuffle = False,
-            num_workers = args.nb_workers,
-            pin_memory = True
-        )
     else:
         ev_dataset = dataset.load(
                 name = args.dataset,
@@ -292,8 +264,6 @@ def main():
         criterion = losses.Proxy_Anchor(nb_classes = nb_classes, sz_embed = args.sz_embedding,mrg = args.mrg, alpha = args.alphap).cuda()
     elif args.loss == 'Circle':
         criterion = losses.CircleLoss(m = 0.4, gamma = 80 ).cuda()
-    elif args.loss == 'sml':
-        criterion = losses.sml(nb_classes = nb_classes, sz_embed = args.sz_embedding).cuda()
     elif args.loss == 'ProxyGML':
         criterion = losses.ProxyGML(C=nb_classes, N=args.N, dim=args.sz_embedding,weight_lambda=args.weight_lambda, r=args.r).cuda()
     elif args.loss == 'Proxy_NCA':
@@ -328,9 +298,6 @@ def main():
         mrg_param=[{'params': criterion.mrg_list, 'lr': float(args.mrg_lr) }]
     if args.loss == 'Proxy_Anchor':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
-    if args.loss == 'sml':
-        param_groups.append({'params': criterion.mu, 'lr': float(args.lr) * 100})
-        param_groups.append({'params': criterion.nv, 'lr': float(args.lr) * 100})
     if args.loss == 'Proxywyf':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
         param_groups.append({'params': criterion.mrg_list, 'lr': float(args.lr) * 5})
@@ -413,10 +380,6 @@ def main():
             if args.loss == 'AMLoss':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'Proxy_Anchor':
-                torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
-            if args.loss == 'sml':
-                torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
-            if args.loss == 'Proxywyf':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
             if args.loss == 'ProxyGML':
                 torch.nn.utils.clip_grad_value_(criterion.parameters(), 10)
