@@ -10,7 +10,7 @@ from dataset import sampler
 from torch.utils.data.sampler import BatchSampler
 from tqdm import *
 import sys
-#import wandb
+import wandb
 
 seed = 1
 random.seed(seed)
@@ -140,8 +140,8 @@ def main():
     
 
     # Wandb Initialization
-   # wandb.init(project=args.dataset + '_AMDML', notes=LOG_DIR)
-   # wandb.config.update(args)
+    wandb.init(project=args.dataset + '_LDM', notes=LOG_DIR)
+    wandb.config.update(args)
     data_root = os.path.join('/media/', 'wyf')  # wyf
     # Dataset Loader and Sampler
     if args.dataset == 'Inshop':
@@ -396,7 +396,7 @@ def main():
                         loss.item()))
 
         losses_list.append(np.mean(losses_per_epoch))
-       # wandb.log({'loss': losses_list[-1]}, step=epoch)
+        wandb.log({'loss': losses_list[-1]}, step=epoch)
         scheduler.step()
         if args.loss == 'AMLoss':
             mrg_scheduler.step()
@@ -411,18 +411,18 @@ def main():
                     Recalls, rp, mapr = utils.evaluate_cos_SOP(model, dl_ev)
 
             # Logging Evaluation Score
-           # if args.dataset == 'Inshop':
-            #     for i, K in enumerate([1, 10, 20, 30, 40, 50]):
+            if args.dataset == 'Inshop':
+                 for i, K in enumerate([1, 10, 20, 30, 40, 50]):
                      #print('args.dataset == Inshop')
-           #          wandb.log({"R@{}".format(K): Recalls[i]}, step=epoch)
-           # elif args.dataset != 'SOP':
-            #     for i in range(6):
+                     wandb.log({"R@{}".format(K): Recalls[i]}, step=epoch)
+            elif args.dataset != 'SOP':
+                 for i in range(6):
                      #print('args.dataset == SOP')
-             #        wandb.log({"R@{}".format(2**i): Recalls[i]}, step=epoch)
-           # else:
-            #     for i in range(4):
+                     wandb.log({"R@{}".format(2**i): Recalls[i]}, step=epoch)
+            else:
+                 for i in range(4):
                      #print('args.dataset == else')
-             #        wandb.log({"R@{}".format(10**i): Recalls[i]}, step=epoch)
+                     wandb.log({"R@{}".format(10**i): Recalls[i]}, step=epoch)
 
             # Best model save
             if best_rp < rp:

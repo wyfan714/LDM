@@ -107,45 +107,6 @@ class AMLoss(torch.nn.Module):
         loss = loss + self.lam * sim_proxy_term  
         return loss
 
-class sml(torch.nn.Module):
-    def __init__(self, nb_classes, sz_embed):
-        torch.nn.Module.__init__(self)
-        self.n_classes = nb_classes
-        mrg = 0.1
-        self.mu = torch.ones(nb_classes) * mrg
-        self.nv = torch.ones(nb_classes) * mrg
-        self.mu = torch.nn.Parameter(self.mu)
-        self.nv = torch.nn.Parameter(self.nv)
-        self.lam = 0.1
-    def forward(self, X, labels):
-        D = F.linear(X, X)
-        batch_size = X.size(0)
-        loss = list()
-        for i in range(batch_size):
-            #pos_pair = D[i][labels == labels[i]]
-            #neg_pair = D[i][labels != labels[i]]
-            pos_index = (labels == labels[i]).nonzero()
-            neg_index = (labels != labels[i]).nonzero()
-            for J in range(pos_index.size(0)):
-                j = pos_index[J]
-                if j == i:
-                    continue
-                for K in range(neg_index.size(0)):
-                    k = neg_index[K]
-                    loss1 = D[i][j] - D[i][k] + self.mu[labels[i]]
-                   # loss2 = D[i][j] - D[j][k] + self.nv[labels[i]]
-                    if loss1 > 0:
-                        loss.append(loss1)
-                    #if loss2 > 0:
-                    #    loss.append(self.lam * loss2)
-        loss1 = torch.sum(self.mu)
-        loss2 = torch.sum(self.nv)
-        loss.append(-1 * loss1 / self.n_classes)
-        loss.append(-1 * loss2 / self.n_classes)
-        return sum(loss)
-
-
-
 
 
 class Proxywyf(torch.nn.Module):
