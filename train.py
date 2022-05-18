@@ -111,9 +111,9 @@ parser.add_argument('--remark', default = '',
     help = 'Any reamrk'
 )
 parser.add_argument('--delta',  default = 0.1, type = float,
-    help ='delta in proxy&proxy')
+    help ='delta in proxy && proxy')
 parser.add_argument('--lam',  default = 1.0, type = float,
-    help ='lambda in proxy&proxy')
+    help ='lambda in proxy && proxy')
 
 
 
@@ -298,9 +298,6 @@ def main():
         mrg_param=[{'params': criterion.mrg_list, 'lr': float(args.mrg_lr) }]
     if args.loss == 'Proxy_Anchor':
         param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
-    if args.loss == 'Proxywyf':
-        param_groups.append({'params': criterion.proxies, 'lr': float(args.lr) * 100})
-        param_groups.append({'params': criterion.mrg_list, 'lr': float(args.lr) * 5})
     if args.loss == 'ProxyGML':
         param_groups.append({'params': criterion.Proxies, 'lr': float(args.lr) * 100})
     if args.loss == 'SoftTripleLoss':
