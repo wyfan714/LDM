@@ -1,17 +1,13 @@
 
-# Proxy Anchor Loss for Deep Metric Learning
+# Learnable Dynamic Margin in Deep Metric Learning
 
-Official PyTorch implementation of CVPR 2020 paper [**Proxy Anchor Loss for Deep Metric Learning**](https://arxiv.org/abs/2003.13911). 
+Official PyTorch implementation of Pattern Recognition paper [Learnable dynamic margin in deep metric learning - ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0031320322004411)
 
-A standard embedding network trained with **Proxy-Anchor Loss** achieves SOTA performance and most quickly converges.
+**Our Loss** is improved by **Proxy Anchor Loss**.
+
+A standard embedding network trained with **Our Loss** achieves SOTA performance and most quickly converges.
 
 This repository provides source code of experiments on four datasets (CUB-200-2011, Cars-196, Stanford Online Products and In-shop) and pretrained models.
-
-### Accuracy in Recall@1 versus training time on the Cars-196
-
-<p align="left"><img src="misc/Recall_Trainingtime.jpg" alt="graph" width="55%"></p>
-
-
 
 ## Requirements
 
@@ -44,40 +40,22 @@ Note that a sufficiently large batch size and good parameters resulted in better
 
 ### CUB-200-2011
 
-- Train a embedding network of Inception-BN (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of Inception-BN (d=512) using **Our loss**
 
 ```bash
-python train.py --gpu-id 0 \
-                --loss Proxy_Anchor \
-                --model bn_inception \
-                --embedding-size 512 \
-                --batch-size 180 \
-                --lr 1e-4 \
-                --dataset cub \
-                --warm 1 \
-                --bn-freeze 1 \
-                --lr-decay-step 10
+./run.sh 0 AMLoss cub 48
 ```
 
 - Train a embedding network of ResNet-50 (d=512) using **Proxy-Anchor loss**
 
 ```bash
-python train.py --gpu-id 0 \
-                --loss Proxy_Anchor \
-                --model resnet50 \
-                --embedding-size 512 \
-                --batch-size 120 \
-                --lr 1e-4 \
-                --dataset cub \
-                --warm 5 \
-                --bn-freeze 1 \
-                --lr-decay-step 5
+./run.sh 0 AMLoss 48
 ```
 
 | Method | Backbone | R@1 | R@2 | R@4 | R@8 |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| [Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1twaY6S2QIR8eanjDB6PoVPlCTsn-6ZJW/view?usp=sharing) | Inception-BN | 69.1 | 78.9 | 86.1 | 91.2 |
-| [Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1s-cRSEL2PhPFL9S7bavkrD_c59bJXL_u/view?usp=sharing) | ResNet-50 | 69.9 | 79.6 | 86.6 | 91.4 |
+| Ours | Inception-BN | 69.0 | 79.4 | 87.3 | 92.1 |
+| Ours | ResNet-50 | 70.2 | 80.0 | 87.3 | 92.4 |
 
 ### Cars-196
 
@@ -189,23 +167,22 @@ Our code is modified and adapted on these great repositories:
 
 
 
-## Other Implementations
-
-- [Pytorch, Tensorflow and Mxnet implementations](https://github.com/geonm/proxy-anchor-loss)
-- [Keras implementations](https://github.com/nixingyang/Proxy-Anchor-Loss) 
-  
-Thanks Geonmo and nixingyang for the good implementation :D
-
 ## Citation
 
 If you use this method or this code in your research, please cite as:
 
-    
-    @InProceedings{Kim_2020_CVPR,
-      author = {Kim, Sungyeon and Kim, Dongwon and Cho, Minsu and Kwak, Suha},
-      title = {Proxy Anchor Loss for Deep Metric Learning},
-      booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-      month = {June},
-      year = {2020}
+
+    @article{WANG2022108961,
+    title = {Learnable dynamic margin in deep metric learning},
+    journal = {Pattern Recognition},
+    volume = {132},
+    pages = {108961},
+    year = {2022},
+    issn = {0031-3203},
+    doi = {https://doi.org/10.1016/j.patcog.2022.108961},
+    url = {https://www.sciencedirect.com/science/article/pii/S0031320322004411},
+    author = {Yifan Wang and Pingping Liu and Yijun Lang and Qiuzhan Zhou and Xue Shan},
+    keywords = {Deep metric learning, Proxy-based loss, Adaptive margin, Image retrieval, Fine-grained images},
+    abstract = {With the deepening of deep neural network research, deep metric learning has been further developed and achieved good results in many computer vision tasks. Deep metric learning trains the deep neural network by designing appropriate loss functions, and the deep neural network projects the training samples into an embedding space, where similar samples are very close, while dissimilar samples are far away. In the past two years, the proxy-based loss achieves remarkable improvements, boosts the speed of convergence and is robust against noisy labels and outliers due to the introduction of proxies. In the previous proxy-based losses, fixed margins were used to achieve the goal of metric learning, but the intra-class variance of fine-grained images were not fully considered. In this paper, a new proxy-based loss is proposed, which aims to set a learnable margin for each class, so that the intra-class variance can be better maintained in the final embedding space. Moreover, we also add a loss between proxies, so as to improve the discrimination between classes and further maintain the intra-class distribution. Our method is evaluated on fine-grained image retrieval, person re-identification and remote sensing image retrieval common benchmarks. The standard network trained by our loss achieves state-of-the-art performance. Thus, the possibility of extending our method to different fields of pattern recognition is confirmed.}
     }
 
