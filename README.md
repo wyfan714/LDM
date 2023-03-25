@@ -3,7 +3,7 @@
 
 Official PyTorch implementation of Pattern Recognition paper [Learnable dynamic margin in deep metric learning - ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0031320322004411)
 
-**Our Loss** is improved by **Proxy Anchor Loss**.
+**Our Loss** is improved by **Proxy Anchor Loss** [[2003.13911\] Proxy Anchor Loss for Deep Metric Learning (arxiv.org)](https://arxiv.org/abs/2003.13911).
 
 A standard embedding network trained with **Our Loss** achieves SOTA performance and most quickly converges.
 
@@ -36,20 +36,42 @@ Thanks to myeongjun for reporting this issue!
 
 ## Training Embedding Network
 
-Note that a sufficiently large batch size and good parameters resulted in better overall performance than that described in the paper. You can download the trained model through the hyperlink in the table.
+Note that a sufficiently large batch size and good parameters resulted in better overall performance than that described in the paper. 
 
 ### CUB-200-2011
 
 - Train a embedding network of Inception-BN (d=512) using **Our loss**
 
 ```bash
-./run.sh 0 AMLoss cub 48
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
+                --model bn_inception \
+                --embedding-size 512 \
+                --batch-size 180 \
+                --lr 1e-4 \
+                --dataset cub \
+                --warm 1 \
+                --bn-freeze 1 \
+                --lr-decay-step 20 \
+                --alphap 48 \
+                --alphan 48
 ```
 
-- Train a embedding network of ResNet-50 (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of ResNet-50 (d=512) using **Our loss**
 
 ```bash
-./run.sh 0 AMLoss 48
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
+                --model resnet50 \
+                --embedding-size 512 \
+                --batch-size 120 \
+                --lr 1e-4 \
+                --dataset cub \
+                --warm 5 \
+                --bn-freeze 1 \
+                --lr-decay-step 10 \
+                --alphap 48 \
+                --alphan 48
 ```
 
 | Method | Backbone | R@1 | R@2 | R@4 | R@8 |
@@ -59,11 +81,11 @@ Note that a sufficiently large batch size and good parameters resulted in better
 
 ### Cars-196
 
-- Train a embedding network of Inception-BN (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of Inception-BN (d=512) using **Our  loss**
 
 ```bash
-python train.py --gpu-id 0 \
-                --loss Proxy_Anchor \
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
                 --model bn_inception \
                 --embedding-size 512 \
                 --batch-size 180 \
@@ -71,14 +93,16 @@ python train.py --gpu-id 0 \
                 --dataset cars \
                 --warm 1 \
                 --bn-freeze 1 \
-                --lr-decay-step 20
+                --lr-decay-step 20 \
+                --alphap 48 \
+                --alphan 48
 ```
 
-- Train a embedding network of ResNet-50 (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of ResNet-50 (d=512) using **Our loss**
 
 ```bash
-python train.py --gpu-id 0 \
-                --loss Proxy_Anchor \
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
                 --model resnet50 \
                 --embedding-size 512 \
                 --batch-size 120 \
@@ -86,21 +110,23 @@ python train.py --gpu-id 0 \
                 --dataset cars \
                 --warm 5 \
                 --bn-freeze 1 \
-                --lr-decay-step 10 
+                --lr-decay-step 10 \
+                --alphap 48 \
+                --alphan 48
 ```
 
-| Method | Backbone | R@1 | R@2 | R@4 | R@8 |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-| [Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1wwN4ojmOCEAOaSYQHArzJbNdJQNvo4E1/view?usp=sharing) | Inception-BN | 86.4 | 91.9 | 95.0 | 97.0 |
-| [Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1_4P90jZcDr0xolRduNpgJ9tX9HZ1Ih7n/view?usp=sharing) | ResNet-50 | 87.7 | 92.7 | 95.5 | 97.3 |
+| Method |   Backbone   | R@1  | R@2  | R@4  | R@8  |
+| :----: | :----------: | :--: | :--: | :--: | :--: |
+|  Ours  | Inception-BN | 87.0 | 92.2 | 95.4 | 97.3 |
+|  Ours  |  ResNet-50   | 89.4 | 93.7 | 96.2 | 97.8 |
 
 ### Stanford Online Products
 
-- Train a embedding network of Inception-BN (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of Inception-BN (d=512) using **Our  loss**
 
 ```bash
-python train.py --gpu-id 0 \
-                --loss Proxy_Anchor \
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
                 --model bn_inception \
                 --embedding-size 512 \
                 --batch-size 180 \
@@ -112,16 +138,34 @@ python train.py --gpu-id 0 \
                 --lr-decay-gamma 0.25
 ```
 
-| Method | Backbone | R@1 | R@10 | R@100 | R@1000 |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|[Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1hBdWhLP2J83JlOMRgZ4LLZY45L-9Gj2X/view?usp=sharing) | Inception-BN | 79.2 | 90.7 | 96.2 | 98.6 |
+- Train a embedding network of ResNet-50 (d=512) using **Our loss**
+
+```bash
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
+                --model resnet50 \
+                --embedding-size 512 \
+                --batch-size 180 \
+                --lr 6e-4 \
+                --dataset SOP \
+                --warm 5 \
+                --bn-freeze 0 \
+                --lr-decay-step 10 \
+                --lr-decay-gamma 0.5 \
+                --epoch 60
+```
+
+| Method |   Backbone   | R@1  | R@10 | R@100 | R@1000 |
+| :----: | :----------: | :--: | :--: | :---: | :----: |
+|  Ours  | Inception-BN | 78.7 | 90.8 | 96.0  |  98.6  |
+|  Ours  |  ResNet-50   | 80.5 | 91.8 | 96.5  |  98.8  |
 
 ### In-Shop Clothes Retrieval
 
-- Train a embedding network of Inception-BN (d=512) using **Proxy-Anchor loss**
+- Train a embedding network of Inception-BN (d=512) using **Our  loss**
 
 ```bash
-python train.py --gpu-id 0 \
+python3 train.py --gpu-id 0 \
                 --loss Proxy_Anchor \
                 --model bn_inception \
                 --embedding-size 512 \
@@ -134,11 +178,27 @@ python train.py --gpu-id 0 \
                 --lr-decay-gamma 0.25
 ```
 
-| Method | Backbone | R@1 | R@10 | R@20 | R@30 | R@40 |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| [Proxy-Anchor<sup>512</sup>](https://drive.google.com/file/d/1VE7psay7dblDyod8di72Sv7Z2xGtUGra/view?usp=sharing) | Inception-BN | 91.9 | 98.1 | 98.7 | 99.0 | 99.1 |
+- Train a embedding network of ResNet-50 (d=512) using **Our loss**
 
+```bash
+python3 train.py --gpu-id 0 \
+                --loss AMLoss \
+                --model resnet50 \
+                --embedding-size 512 \
+                --batch-size 180 \
+                --lr 6e-4 \
+                --dataset Inshop \
+                --warm 5 \
+                --bn-freeze 0 \
+                --lr-decay-step 10 \
+                --lr-decay-gamma 0.5 \
+                --epoch 60
+```
 
+| Method |   Backbone   | R@1  | R@2  | R@4  | R@8  |
+| :----: | :----------: | :--: | :--: | :--: | :--: |
+|  Ours  | Inception-BN | 92.0 | 98.1 | 98.8 | 99.2 |
+|  Ours  |  ResNet-50   | 92.8 | 98.3 | 98.8 | 99.2 |
 
 ## Evaluating Image Retrieval
 
@@ -148,7 +208,7 @@ Trained best model will be saved in the `./logs/folder_name`.
 
 ```bash
 # The parameters should be changed according to the model to be evaluated.
-python evaluate.py --gpu-id 0 \
+python3 evaluate.py --gpu-id 0 \
                    --batch-size 120 \
                    --model bn_inception \
                    --embedding-size 512 \
@@ -164,6 +224,7 @@ Our code is modified and adapted on these great repositories:
 
 - [No Fuss Distance Metric Learning using Proxies](https://github.com/dichotomies/proxy-nca)
 - [PyTorch Metric learning](https://github.com/KevinMusgrave/pytorch-metric-learning)
+- [[2003.13911\] Proxy Anchor Loss for Deep Metric Learning (arxiv.org)](https://arxiv.org/abs/2003.13911)
 
 
 
